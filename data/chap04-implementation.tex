@@ -4,15 +4,84 @@
 
 Anylearn是一款大数据机器学习研发管理系统，支持数据集、算法族、模型库等资产管理，支持机器学习研发过程管理、知识沉淀、模型迁移，满足团队资源统筹利用、团队高效协作等人工智能工程化需求。
 
+Anylearn包括：
+\begin{itemize}
+  \item Anylearn云环境，即Anylearn长活系统线上环境（https://anylearn.nelbds.cn/）；
+  \item Anylearn交互网页，即Anylearn云环境的Web页面；
+  \item Anylearn客户端SDK（https://pypi.org/project/anylearn/）。
+\end{itemize}
 
-\section{概念定义}
-
-TBD
+Anylearn交互网页的主要模块包括：训练项目、数据集、算法族、模型库、镜像中心、计算资源概况以及用户中心等。
 
 
 \section{使用场景}
 
-TBD
+\subsection{场景一：将本地机器学习项目适配至Anylearn云环境}
+
+用户在本地（PC、开发服务器等自有环境）已开展机器学习项目的研发，已经明确了要使用的数据集、算法、预训练模型。算法经调试，已成功在本地运行了小规模训练。
+用户希望将此机器学习项目适配到Anylearn云环境，使用更多算力和研发管理功能进行更大规模的训练和验证。
+
+具体步骤如图\ref{fig:scenario1}所示。
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\linewidth]{anylearn-scenario1.png}
+  \caption{Anylearn使用场景一：本地项目适配至云环境}
+  \label{fig:scenario1}
+\end{figure}
+
+（1）用户根据机器学习项目需求，在本地已准备好数据集和预训练模型。
+根据机器学习任务的不同，可能会使用一个或多个数据集和预训练模型（例如：域适应迁移学习），也可能不需要数据集和模型。
+
+（2）用户在本地已编写并调试好机器学习算法，已在本地使用上述数据集和预训练模型初步跑通训练和验证。
+
+（3）用户前往Anylearn交互网页并注册账户。
+然后，用户通过Anylearn交互网页将步骤1中的数据集和预训练模型分别上传至Anylearn云环境。
+当数据集或预训练模型的规模较大时（依据经验，超过500MB即为大），通过Anylearn交互网页上传效率较低，应当联系Anylearn系统管理员通过其他方式上传。
+需要注意的是，由于网络条件有限，在Anylearn云环境中执行训练时从外网下载数据集和模型通常非常缓慢，使用torchvision、huggingface等库进行自动下载的数据集和模型需要提前上传到Anylearn云环境。
+
+（4）用户需梳理并明确机器学习算法的输出路径和超参数。
+输出可能包括：模型检查点文件（checkpoints）、最终模型参数文件（weights）、TensorBoard日志文件、模型验证效果文件等等。
+Anylearn云环境中要求这些输出均需要写入到一个统一的路径下，该路径应当是以算法目录下的一个子目录（例如：假设用户本地的算法存放在/workspace/myuser/myalgo下，本步骤中涉及的输出可以写入./results目录，即绝对路径/workspace/myuser/myalgo/results，但不可写入算法目录以外的/data/results路径下）。
+
+（5）用户在本地安装Anylearn客户端SDK。
+用户可能需要修改步骤（2）中的本地算法代码。
+用户在本地编写一个Python脚本，调用Anylearn客户端库（SDK），将本地算法上传至Anylearn云环境，并向Anylearn云环境提交一个训练任务。
+
+（6）用户前往Anylearn交互网页，查看上述提交的训练任务的状态。
+由于计算资源有限，提交的训练任务可能无法马上执行，需排队等待资源释放。
+
+（7）当训练任务开始执行后，用户在Anylearn交互网页中查看训练任务的日志、系统监控等信息，判断训练执行情况以及训练出的模型的效果。
+
+（8）当用户发现训练有问题时：
+\begin{enumerate}
+  \item 当训练超参数存在问题时，用户在本地算法或步骤5中编写的本地Python脚本中修改超参数配置，重新执行本地Python脚本以上传修改后的算法并提交一个新的训练任务，即重复步骤（5）及其后续步骤；
+  \item 当训练代码（例如：数据加载方式、模型架构、优化器使用等等）存在问题时，用户调整本地算法代码，上传修改后的算法并提交一个新的训练任务，即重复步骤（2）及其后续步骤；
+  \item 当数据集存在问题时，用户调整数据集或重新准备数据集，并将修改后的数据集当做一个新的数据集上传至Anylearn云环境（已存在的数据集不支持变更文件），即重复步骤（1）及其后续步骤。
+\end{enumerate}
+
+（9）当用户认为训练出的模型达到预期效果时，用户在Anylearn交互网页上将训练出的模型参数文件转存至Anylearn云环境的模型库，形成模型资产。
+
+\subsection{场景二：参与Anylearn云环境上已存在的机器学习项目}
+
+机器学习项目组已在Anylearn上开展工作，用户作为新进组的成员，对已经在Anylearn云环境中跑通的算法进行迭代优化。
+用户需将项目组先前上传至Anylearn云环境的数据集、预训练模型和算法下载至本地（PC、开发服务器等自有环境），对算法进行调整，再将算法上传回Anylearn云环境并进行训练和验证。
+
+具体步骤如图\ref{fig:scenario2}所示。
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\linewidth]{anylearn-scenario2.png}
+  \caption{Anylearn使用场景二：参与云环境中的项目}
+  \label{fig:scenario2}
+\end{figure}
+
+（1）用户按照项目组要求，通过Anylearn交互网页将Anylearn云环境中的数据集、预训练模型和算法下载至本地。
+由于网络条件有限，从Anylearn交互网页上下载较大规模的数据集和模型（依据经验，GB级以上即为大）通常非常缓慢，应当联系Anylearn系统管理员通过其他方式下载。
+
+（2）用户在本地修改算法代码并调试，确保修改后的代码在本地使用上述数据集和预训练模型初步跑通训练和验证。
+
+（3）后续步骤请参考场景一的步骤（4）至（9）。
 
 
 \section{架构设计}
