@@ -4,7 +4,19 @@
 
 Anylearn是一款大数据机器学习研发管理系统，支持数据集、算法族、模型库等资产管理，支持机器学习研发过程管理、知识沉淀、模型迁移，满足团队资源统筹利用、团队高效协作等人工智能工程化需求。
 
-Anylearn包括：
+2017年，大数据系统软件国家工程研究中心（原大数据系统软件国家工程实验室）成立，旨在推动大数据系统软件领域的科研和产业发展。
+依托大数据系统软件国家工程研究中心资源和平台，软件学院机器学习组开始快速拓展人工智能相关研究和应用落地。
+在此过程中，如何有效地对机器学习模型研发进行管理、提高模型落地应用效率成为了一个重要问题。
+Anylearn作为机器学习平台应运而生。
+
+在项目初期，团队对Anylearn的主要需求在于系统化地打通数据到模型的稳定通路，并高效地管理团队的GPU资源，避免资源争抢和浪费，提高资源使用效率。
+在后续发展过程中，团队逐渐意识到机器学习科学研究中更关注的是研发迭代的功能支持和管理手段。
+Anylearn通过多年的发展，支持了面向算法开发者的SDK、自定义算法上传、多样化的训练环境、训练过程跟踪、超参数调优、训练结果预览等偏向模型训练的功能，以及面向各类用户管理需求的用户首页、主管页面、管理员页面等功能。
+目前，Anylearn在机器学习研发过程管理和资产管理方面也逐渐形成体系，围绕训练任务建立起过程记录和资产关联，支持团队的知识沉淀和协作。
+
+\section{使用场景}
+
+为了便于介绍Anylearn的使用场景和典型工作流程，将Anylearn从概念上分为以下部分：
 \begin{itemize}
   \item Anylearn云环境，即Anylearn长活系统线上环境（https://anylearn.nelbds.cn/）；
   \item Anylearn交互网页，即Anylearn云环境的Web页面；
@@ -12,9 +24,6 @@ Anylearn包括：
 \end{itemize}
 
 Anylearn交互网页的主要模块包括：训练项目、数据集、算法族、模型库、镜像中心、计算资源概况以及用户中心等。
-
-
-\section{使用场景}
 
 \subsection{场景一：将本地机器学习项目适配至Anylearn云环境}
 
@@ -84,14 +93,142 @@ Anylearn云环境中要求这些输出均需要写入到一个统一的路径下
 （3）后续步骤请参考场景一的步骤（4）至（9）。
 
 
-\section{架构设计}
+\section{系统设计}
 
-TBD
+重点针对机器学习模型的研发效率问题，在业务层面上，Anylearn支持机器学习研发的过程管理、知识沉淀、模型迁移，满足资源统筹利用、团队高效协作等人工智能工程化需求；
+在技术层面上，Anylearn采用了云原生的技术架构，以云原生领域的事实标准Kubernetes作为基础架构，充分融合网络应用系统和人工智能领域的开源生态，构建出全面容器化、模块化、可扩展、可伸缩、高可用的云原生机器学习平台。
+
+\subsection{业务架构}
+\label{sec:anylearnbusiness}
+
+以研发管理的需求为导向，以模型研发的高效率、可追溯、可复现为总体目标，Anylearn的业务规划主要针对机器学习研发过程管理和资产管理两个方面。
+图\ref{fig:anylearnbusiness}展示了Anylearn的业务总体架构。
+
+过程管理方面，以数据挖掘和机器学习相关方法论\cite{Wir00, Ame19}为基础，聚焦模型研发紧密相关的数据准备、模型训练、超参数调优等环节，结合机器学习模型研发跨团队跨人员角色的特点，为算法工程师、数据科学家、软件工程师、领域专家、团队主管等研发人员提供组织管理、用户管理、过程分工、项目管理、可视化等管理能力。
+资产管理方面，以数据集、算法族、模型库等资产为核心，通过研发任务进行串联，并基于数据对象抽象和数据实质存储之间的映射关系，实现所有资产元信息和资产存储的统一集约化管理，为团队提供资产的资产元信息管理、资产版本管理、关联关系管理、模型血统等管理能力，同时基于权限机制对团队提供资产共享协作的能力。
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.98\linewidth]{anylearn-architecture-business.png}
+  \caption{Anylearn业务总体架构}
+  \label{fig:anylearnbusiness}
+\end{figure}
+
+\subsection{系统架构}
+
+Anylearn在系统整体角度上看的架构如图\ref{fig:anylearnsys}所示。
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.98\linewidth]{anylearn-architecture-system.png}
+  \caption{Anylearn系统总体架构}
+  \label{fig:anylearnsys}
+\end{figure}
+
+对外，Anylearn提供以研发过程管理和研发资产管理为主的机器学习研发管理能力，如\ref{sec:anylearnbusiness}节所述。
+对内，Anylearn基于Kubernetes基础架构和云原生开源生态技术栈，形成了训练验证、调参、部署、服务一体化的云原生机器学习平台，从概念上支撑并集成多个领域的算法库，包括气象大模型、时序大模型、工业仿真求解、智能调度等。
+此外，机器学习模型的原型应用演示作为Anylearn的子系统为用户提供了模型应用的可视化展示和交互能力。
 
 
-\section{功能设计}
+\subsection{功能架构}
 
-TBD
+【TODO 功能架构】
+
+\subsection{数据架构}
+
+Anylearn的数据架构如图\ref{fig:anylearndata}所示。
+数据模型的设计遵循叙述性（declarativity）原则\cite{Sch17}：资产表存储资产的元信息，而不是产生这些资产的代码文件，元信息的存储使得查询和分析更加简便，如果存储代码文件，会使得代码的版本追溯变得困难，并且难以发现代码中存在的错误。
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.98\linewidth]{anylearn-architecture-data.png}
+  \caption{Anylearn数据模型架构}
+  \label{fig:anylearndata}
+\end{figure}
+
+数据模型包含以下四大类数据表结构。
+
+（1）用户表，包括存储用户信息的 User 表。
+User表记录了用户名、密码、邮箱、注册时间、邮箱的验证情况，并用一个布尔变量记录该用户是否是管理员。
+
+（2）项目相关表，包括存储项目信息的 Project 表、存储用户分享项目的 UserShareProject 表、存储项目标签的 Tag 表和存储任务标签的 TaskTag 表。
+Project表记录了名字、描述、创建时间、更新时间、创建者。
+Tag 表记录标签文本，通过外键和 User表和Project表成多对一关系。
+TaskTag表作为关系表，使得Tag表和Task表成多对多关系，符合数据库设计的第三范式（3NF）。
+UserShareProject 作为关系表，使得User表和Project表成多对多关系。
+
+（3）任务相关表，包括存储任务信息的 Task 表、存储即时指标的 IntermediateMetric 表、存储用户点赞和分享任务的 UserFavTask 和 UserShareTask 表、存储任务输入的数据集、模型、和文件的 TaskInputDataset、TaskInputModel、TaskInputFile表。
+Task表记录了任务名、描述、创建时间、启动时间、结束时间、创建者、所属项目、使用算法、算法仓库引用、使用镜像、启动命令、启动参数、环境变量、输出路径、输出文件、当前状态、最终指标等信息。
+TaskInputDataset、TaskInputModel、 TaskInputFile 三者作为关系表，使得Task表和数据集、模型、文件这三类资产表成多对多的关系，从而记录了任务的资产血统信息，符合第三范式（3NF）。
+Task表通过外键与ContainerImage、FileArtifact、AlgorithmArtifact成多对一的关系。
+UserFavTask、UserShareTask、IntermediateMetric通过外键与Task表成多对一关系。
+
+（4）资产相关表。
+Anylearn的资产包括数据集、模型、文件、训练镜像和算法五类，根据资产的特点，可以分为以下三类：
+
+（4.1）数据集、模型、文件。这三者都是以文件形式存储在本地磁盘上，数据表的字段相近，因此归为一类。该类包括了存储数据集、模型和文件元信息的 DatasetArtifact、ModelArtifact、FileArtifact表，存储用户分享数据集、模型和文件的 UserShareDataset、UserShareModel、UserShareFile表，这三张表作为关系表，使得三张资产表和User表成多对多关系。
+
+（4.2）训练镜像。镜像由docker由进行管理，这类表包括存储镜像元信息的 ContainerImage、存储自定义镜像元信息的ContainerImageProfile 表、存储用户分享镜像的 UserShareImage表。ContainerImage表记录了展示名、完整地址、描述，并用一个布尔变量标识公开性。ContainerImageProfile表记录自定义镜像的创建者、基础镜像、base64编码、创建时间、构建开始时间、构建结束时间、构建状态，与User表成多对一关系，与ContainerImage表成一对一关系。UserShareImage表作为关系表，使得ContainerImage表和User表成多对多关系。
+
+（4.3）算法。算法代码文件使用gitea进行版本管理，该类包括存储算法元信息的 AlgorithmArtifact表、存储用户分享算法的 UserShareAlgorithm 表。UserShareAlgorithm表作为关系表，使得AlgorithmArtifact表与User表成多对多关系。
+
+根据数据表的设计，Anylearn的数据模型能够满足以下几点特性。
+
+（1）存储资产元信息。 
+数据模型包含相应的表（DatasetArtifact，ModelArtifact，FileArtifact，AlgorithmArtifact、ContainerImage）来存储数据集、模型、文件、算法、镜像这五种资产的元信息，前四者共有的元信息有资产的名字、描述、状态、公开可见性、创建者、创建时间、更新时间，数据集、模型、文件特有的元信息包括实际存储路径、文件大小，模型的元信息还包括一个外键记录对应任务，算法特有的元信息包括git地址、超参数。
+
+（2）支持资产追溯。
+上述五类资产和任务是相关联的，每个任务关联一个算法，另外关联一个或多个数据集、模型、文件，任务和镜像是多对一关系，因此可以通过查找任务关联的方式追溯各类资产。
+
+（3）支持用户协作。
+UserShareDataset、UserShareModel、UserShareFile、UserShareImage、UserShareAlgorithm 五张关系表存储了用户将自己管理的数据集、模型、文件、镜像、算法分享给其他用户的信息，方便查询和修改。
+
+（4）保存执行环境。
+ContainerImage和ContainerImageProfile表存储训练任务的镜像信息，得以保存每次训练任务的执行环境，避免了操作系统、驱动或依赖库不同可能带来的可复现性问题。
+
+（5）支持自定义标签。
+Tag表存储了用户给项目贴的标签，TaskTag表存储了项目中各个任务含有的标签，这样的设计使得用户可以自建标签索引，方便用户对项目和任务进行搜索，实现了跨资产检索的高级管理功能。
+
+\subsection{技术架构}
+
+在技术实现的层面上，Anylearn采用了主流的C/S架构，组件层级主要分为客户端、服务端、系统软件基础设施和云原生基础平台。
+客户端主要包括Web页面、Python SDK和命令行工具。
+服务端主要包括负责元信息和存储管理的管理侧后端、负责任务调度和执行的执行侧后端、容器运行时、文件存储等组件。
+系统软件基础设施层主要包括关系型数据库、时序数据库、消息队列、Git平台、日志套件和监控套件。
+底层云原生基础平台则是云原生的事实标准Kubernetes。
+整体如图\ref{fig:anylearntech}所示。
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\linewidth]{anylearn-architecture-tech.png}
+  \caption{Anylearn技术组件架构}
+  \label{fig:anylearntech}
+\end{figure}
+
+前端Web页面采用了Vue2框架，实现了客户端路由、状态管理、文件目录结构预览、代码预览、图像预览、控件拖拽、图表可视化等基础技术能力，支撑了Anylearn直接面向用户的业务功能，包括用户注册登录、任务信息展示、资产信息展示、主管监控页面等等。
+与后端通过RESTful API进行通信，开发阶段可通过URL代理对接不同的服务端环境。
+
+Python SDK本质上是对RESTful API的封装，提供了更加友好的Python接口，方便用户在编程环境中调用Anylearn的服务端功能，可灵活支持与其他业务系统的集成。
+此外，Python SDK中还特别提供了面向算法开发者的快速训练接口，可以通过编写简单的Python脚本调用一个函数即可将本地算法上传至Anylearn云环境并提交训练任务，对算法开发调试阶段的快速迭代试错提供了有力支撑。
+
+命令行工具是基于Python SDK采用Click命令行框架实现的，提供了一些简单的命令行接口，方便用户在终端环境中调用Anylearn的服务端功能，例如：上传数据集、下载模型、查看计算资源情况等。
+
+管理侧后端采用了Python的Flask框架实现，负责元信息和存储管理，包括用户管理、项目管理、任务管理、资产管理、标签管理、用户权限等功能。
+此外，管理侧还负责对接底层文件存储、关系型数据库、时序数据库、消息队列、Git平台、日志套件和监控套件，支撑资产存储管理、元信息管理、训练过程数据管理、任务执行代理、算法代码管理、训练日志管理和系统监控管理等技术能力。
+在部署形态上，管理侧采用了Kubernetes Operator的应用开发范式，通过CRD和控制器的方式实现了管理侧后端的自动化部署以及基础的容错和故障恢复。
+
+执行侧后端是完全云原生的服务，采用了Kubernetes Operator的应用开发范式，将在线开发、训练、原型应用（推理服务）、自定义镜像构建、训练过程跟踪、超参数调优、文件压缩（模型、数据集、结果文件等）等作业抽象成Kubernetes的Deployment长时服务或Pod短时任务，并通过CRD和控制器进行启停维护和管理。
+
+执行侧向下直接依托于容器运行时和一系列容器镜像。
+Anylearn在原理上采用通用的容器化作业执行，理论上可支持所有可在容器内运行的机器学习计算框架，如PyTorch、TensorFlow、MindSpore、PaddlePaddle、XGBoost等。
+根据当前用户的实际需求，Anylearn提供了以PyTorch为主的一系列基础镜像，并支持用户基于这些镜像构建自定义镜像，以满足用户对特定框架、特定库、特定环境的需求。
+
+存储方面，Anylearn底层对NFS进行了封装形成了Cave存储组件，并通过Kubernetes的Deployment和Service进行部署，形成文件存储集群，支持容器内远程挂载形成持久化存储。
+此外，Anylearn在管理侧后端的Operator中深度集成了Cave的部署管理，可以支持目录级别的NFS节点启动，并支持动态扩缩容。
+然而，Cave属于轻量化封装组件，并未针对分布式存储的数据可用性、数据冗余、读写性能等方面进行实现。
+在快速部署和小规模业务场景下可以屏蔽存储层的复杂性，但在大规模并发训练任务的场景下可能会成为瓶颈。
+
+系统软件基础设施方面，Anylearn采用了PostgreSQL作为关系型数据库，管理元信息和关联关心；采用IoTDB作为时序数据库，存储和管理训练过程跟踪数据；采用Redis作为消息队列和中间件，传递任务执行信息，解耦管理侧与执行侧；采用Gitea作为Git平台，负责管理算法代码库和版本控制，与管理侧深度集成，可独立于用户算法本身的Git仓库互不影响，同时又能精准记录每一次训练相关的代码变更；采用ECK+EFK作为日志套件，Prometheus作为监控套件。
 
 
 \section{线上环境}
